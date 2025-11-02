@@ -1,38 +1,12 @@
-import { http, createConfig } from 'wagmi'
-import { mezoTestnet } from './chains'
-import { injected, walletConnect } from 'wagmi/connectors'
+import { getConfig } from '@mezo-org/passport'
 
-// Mezo Testnet Chain Configuration
-export const mezoTestnetChain = {
-  id: 686868,
-  name: 'Mezo Testnet',
-  nativeCurrency: {
-    decimals: 18,
-    name: 'Ethereum',
-    symbol: 'ETH',
-  },
-  rpcUrls: {
-    default: { http: [process.env.NEXT_PUBLIC_MEZO_TESTNET_RPC_URL || 'https://testnet-rpc.mezo.org'] },
-    public: { http: [process.env.NEXT_PUBLIC_MEZO_TESTNET_RPC_URL || 'https://testnet-rpc.mezo.org'] },
-  },
-  blockExplorers: {
-    default: { name: 'Mezo Explorer', url: 'https://explorer.mezo.org' },
-  },
-  testnet: true,
-} as const
-
-// Wagmi Configuration
-export const config = createConfig({
-  chains: [mezoTestnetChain] as any,
-  connectors: [
-    injected(),
-    walletConnect({
-      projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || '',
-    }),
-  ],
-  transports: {
-    [mezoTestnetChain.id]: http(),
-  },
+// Note: Using Mezo Passport's getConfig instead of custom wagmi config
+// This provides proper support for Bitcoin wallets (Unisat, OKX, Xverse)
+// and EVM wallets through RainbowKit
+export const config = getConfig({
+  appName: 'Leo Finance',
+  // Add custom Bitcoin wallet configuration here if needed
+  // bitcoinWallets: [...]
 })
 
 // App Configuration
